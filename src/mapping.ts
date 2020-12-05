@@ -29,7 +29,9 @@ export function handleAddChannel(event: AddChannelEvent): void {
 
   // Entities can be loaded from the store using a string ID; this ID
   // needs to be unique across all entities of the same type
-  let entity = AddChannel.load(event.transaction.from.toHex())
+  let entity = new AddChannel(
+    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+  )
 
   // Entities only exist after they have been saved to the store;
   // `null` checks allow to create entities on demand
@@ -98,14 +100,18 @@ export function handleAddChannel(event: AddChannelEvent): void {
 }
 
 export function handleDeactivateChannel(event: DeactivateChannelEvent): void {
-  let entity = DeactivateChannel.load(event.transaction.from.toHex())
+  let entity = new DeactivateChannel(
+    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+  )
 
   entity.channel = event.params.channel
   entity.save()
 }
 
 export function handleDonation(event: DonationEvent): void {
-  let entity = Donation.load(event.transaction.from.toHex())
+  let entity = new Donation(
+    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+  )
 
   entity.donator = event.params.donator
   entity.amt = event.params.amt
@@ -113,7 +119,9 @@ export function handleDonation(event: DonationEvent): void {
 }
 
 export function handleInterestClaimed(event: InterestClaimedEvent): void {
-  let entity = InterestClaimed.load(event.transaction.from.toHex())
+  let entity = new InterestClaimed(
+    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+  )
 
   entity.user = event.params.user
   entity.amount = event.params.amount
@@ -158,7 +166,9 @@ export function handleUnsubscribe(event: UnsubscribeEvent): void {
 }
 
 export function handleUpdateChannel(event: UpdateChannelEvent): void {
-  let entity = UpdateChannel.load(event.transaction.from.toHex())
+  let entity = new UpdateChannel(
+    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+  )
 
   entity.channel = event.params.channel
   entity.identity = event.params.identity
