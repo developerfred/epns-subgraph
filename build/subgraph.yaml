@@ -1,6 +1,6 @@
 specVersion: 0.0.2
 schema:
-  file: ./schema.graphql
+  file: schema.graphql
 dataSources:
   - kind: ethereum/contract
     name: EPNSCore
@@ -25,7 +25,7 @@ dataSources:
         - Withdrawal
       abis:
         - name: EPNSCore
-          file: ./abis/EPNSCore.json
+          file: EPNSCore/abis/EPNSCore.json
       eventHandlers:
         - event: AddChannel(indexed address,indexed uint8,bytes)
           handler: handleAddChannel
@@ -47,4 +47,4 @@ dataSources:
           handler: handleUpdateChannel
         - event: Withdrawal(indexed address,address,uint256)
           handler: handleWithdrawal
-      file: ./src/mapping.ts
+      file: EPNSCore/EPNSCore.wasm

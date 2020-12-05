@@ -1,6 +1,18 @@
 import { BigInt } from "@graphprotocol/graph-ts"
 import {
   EPNSCore,
+  AddChannel as AddChannelEvent,
+  DeactivateChannel as DeactivateChannelEvent,
+  Donation as DonationEvent,
+  InterestClaimed as InterestClaimedEvent,
+  PublicKeyRegistered as PublicKeyRegisteredEvent,
+  SendNotification as SendNotificationEvent,
+  Subscribe as SubscribeEvent,
+  Unsubscribe as UnsubscribeEvent,
+  UpdateChannel as UpdateChannelEvent,
+  Withdrawal as WithdrawalEvent
+} from "../generated/EPNSCore/EPNSCore"
+import { 
   AddChannel,
   DeactivateChannel,
   Donation,
@@ -11,18 +23,18 @@ import {
   Unsubscribe,
   UpdateChannel,
   Withdrawal
-} from "../generated/EPNSCore/EPNSCore"
-import { ExampleEntity } from "../generated/schema"
+   } from "../generated/schema"
 
-export function handleAddChannel(event: AddChannel): void {
+export function handleAddChannel(event: AddChannelEvent): void {
+
   // Entities can be loaded from the store using a string ID; this ID
   // needs to be unique across all entities of the same type
-  let entity = ExampleEntity.load(event.transaction.from.toHex())
+  let entity = AddChannel.load(event.transaction.from.toHex())
 
   // Entities only exist after they have been saved to the store;
   // `null` checks allow to create entities on demand
   if (entity == null) {
-    entity = new ExampleEntity(event.transaction.from.toHex())
+    entity = new AddChannel(event.transaction.from.toHex())
 
     // Entity fields can be set using simple assignments
     entity.count = BigInt.fromI32(0)
@@ -85,20 +97,81 @@ export function handleAddChannel(event: AddChannel): void {
   // - contract.usersInterestInWallet(...)
 }
 
-export function handleDeactivateChannel(event: DeactivateChannel): void {}
+export function handleDeactivateChannel(event: DeactivateChannelEvent): void {
+  let entity = DeactivateChannel.load(event.transaction.from.toHex())
 
-export function handleDonation(event: Donation): void {}
+  entity.channel = event.params.channel
+  entity.save()
+}
 
-export function handleInterestClaimed(event: InterestClaimed): void {}
+export function handleDonation(event: DonationEvent): void {
+  let entity = Donation.load(event.transaction.from.toHex())
 
-export function handlePublicKeyRegistered(event: PublicKeyRegistered): void {}
+  entity.donator = event.params.donator
+  entity.amt = event.params.amt
+  entity.save()
+}
 
-export function handleSendNotification(event: SendNotification): void {}
+export function handleInterestClaimed(event: InterestClaimedEvent): void {
+  let entity = InterestClaimed.load(event.transaction.from.toHex())
 
-export function handleSubscribe(event: Subscribe): void {}
+  entity.user = event.params.user
+  entity.amount = event.params.amount
+  entity.save()
+}
 
-export function handleUnsubscribe(event: Unsubscribe): void {}
+export function handlePublicKeyRegistered(event: PublicKeyRegisteredEvent): void {
+  let entity = new PublicKeyRegistered(
+    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+  )
+  entity.owner = event.params.owner
+  entity.publickeyy = event.params.publickey
+  entity.save()
+}
 
-export function handleUpdateChannel(event: UpdateChannel): void {}
+export function handleSendNotification(event: SendNotificationEvent): void {
+  let entity = new SendNotification(
+    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+  )
+  entity.channel = event.params.channel
+  entity.recipient = event.params.recipient
+  entity.identity = event.params.identity
+  entity.save()
+}
 
-export function handleWithdrawal(event: Withdrawal): void {}
+export function handleSubscribe(event: SubscribeEvent): void {
+  let entity = new Subscribe(
+    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+  )
+  entity.channel = event.params.channel
+  entity.user = event.params.user
+  entity.save()
+}
+
+export function handleUnsubscribe(event: UnsubscribeEvent): void {
+  let entity = new Unsubscribe(
+    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+  )
+  entity.channel = event.params.channel
+  entity.user = event.params.user
+  entity.save()
+}
+
+export function handleUpdateChannel(event: UpdateChannelEvent): void {
+  let entity = UpdateChannel.load(event.transaction.from.toHex())
+
+  entity.channel = event.params.channel
+  entity.identity = event.params.identity
+  entity.save()
+}
+
+export function handleWithdrawal(event: WithdrawalEvent): void {
+  let entity = new Withdrawal(
+    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+  )
+
+  entity.to = event.params.to
+  entity.token = event.params.token
+  entity.amount = event.params.amount
+  entity.save()
+}
