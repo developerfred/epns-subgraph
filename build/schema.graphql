@@ -59,3 +59,15 @@ type Withdrawal @entity {
   token: Bytes! # address
   amount: BigInt! # uint256
 }
+
+type AdminChanged @entity {
+  id: ID!
+  newAdmin: Bytes!
+  previousAdmin: Bytes!
+
+}
+
+type Upgraded @entity {
+  id: ID!
+  implementation: Bytes!
+}

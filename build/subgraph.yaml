@@ -48,3 +48,25 @@ dataSources:
         - event: Withdrawal(indexed address,address,uint256)
           handler: handleWithdrawal
       file: EPNSCore/EPNSCore.wasm
+  - kind: ethereum/contract
+    name: EPNSProxy
+    network: ropsten
+    source:
+      address: "0xc882dA9660d29c084345083922F8a9292E58787D"
+      abi: EPNSProxy
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - AdminChanged(address,address)
+        - Upgraded(indexed address)
+      abis:
+        - name: EPNSProxy
+          file: EPNSProxy/abis/EPNSProxy.json
+      eventHandlers:
+        - event: AdminChanged(address,address)
+          handler: handleAdminChanged
+        - event: Upgraded(indexed address)
+          handler: handleAdminChanged
+      file: EPNSCore/EPNSCore.wasm
